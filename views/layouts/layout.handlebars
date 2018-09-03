@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Refugee Info Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- JQuery & JQuery UI .js -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <!-- create Table from JSON -->
+
+    <!-- Front Awesome & Leaftlet & Leaflet Draw -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.9/leaflet-routing-machine.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/perliedman-leaflet-control-geocoder/1.6.0/Control.Geocoder.min.css"/>
+
+
+    <!-- sidebar CSS -->
+    <link rel="stylesheet" href="/css/leaflet-sidebar.css"/>
+
+    <!-- DataTable JQuery -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/responsive/2.2.1/css/responsive.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/select/1.2.4/css/select.dataTables.min.css"/>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/select/1.2.4/js/dataTables.select.min.js"></script>
+
+    <link rel="stylesheet" href="/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="header clearfix">
+        <nav>
+            <ul class="nav nav-pills pull-right">
+                {{#if user}}
+                    <li role="presentation"><a href="/">Map</a></li>
+                    <li role="presentation"><a href="/users/logout">Logout</a></li>
+                {{else}}
+                    <li role="presentation"><a href="/users/login">Login</a></li>
+                    <li role="presentation"><a href="/users/register">Register</a></li>
+                {{/if}}
+            </ul>
+        </nav>
+        <h3 class="text-muted">Refugee Info Map</h3>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            {{#if success_msg}}
+                <div class="alert alert-success">{{success_msg}}</div>
+            {{/if}}
+
+            {{#if error_msg}}
+                <div class="alert alert-danger">{{error_msg}}</div>
+            {{/if}}
+
+            {{#if error}}
+                <div class="alert alert-danger">{{error}}</div>
+            {{/if}}
+
+            {{{ body }}}
+        </div>
+
+
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2018 Sarah Lechler.</p>
+    </footer>
+
+</div> <!-- /container -->
+</body>
+</html>
