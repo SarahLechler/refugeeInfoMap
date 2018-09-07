@@ -34,7 +34,24 @@ exports.search = function (input) {
 function _searchname(Json, name) {
     let h = Json.Name.toLowerCase();
     let verg = name.toLowerCase();
-    return h.includes(verg);
+    let includes = false;
+    if (h.includes(verg)) {
+        includes=true;
+    }
+    let wordArray = Json.Schlagworte;
+    if (wordArray.indexOf(',') > -1) {
+        let searchArray = wordArray.split(',');
+        searchArray.forEach((searchArrayEntry, index, array) => {
+            array[index] = searchArrayEntry.replace(/\s+/g, '');
+        });
+        searchArray.forEach(word =>{
+            console.log(word.toLowerCase());
+            if((word.toLowerCase().includes(verg))){
+                includes=true;
+            }
+        })
+    }
+    return includes;
 }
 
 
@@ -149,13 +166,13 @@ function _cutter(Json) {
 };
 
 exports.filterDataCatagory = (searcheCategory) => {
-    let result = []
+    let result = [];
     testing.forEach(entry => {
         if (entry.Kategorie.indexOf(',') > -1) {
             let searchArray = entry.Kategorie.split(',');
             searchArray.forEach((searchArrayEntry, index, array) => {
                 array[index] = searchArrayEntry.replace(/\s+/g, '')
-            })
+            });
             searchArray.forEach(category => {
                 if (category === searcheCategory) {
                     result.push(entry)

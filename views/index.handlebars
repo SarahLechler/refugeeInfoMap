@@ -4,6 +4,8 @@
         <ul role="tablist">
             <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
             <li><a href="#filter" role="tab"><i class="fa fa-filter"></i></a></li>
+            <li><a href="#contribute" role="tab"><i class="fa fa-edit"></i></a></li>
+            <li><a href="#info" role="tab"><i class="fa fa-info"></i></a></li>
             <li><a href="#link" role="tab"><i class="fa fa-envelope"></i></a></li>
             <li><a href="#git" role="tab"><i class="fa fa-github"></i></a></li>
         </ul>
@@ -24,12 +26,11 @@
                 <div id="searchBox">
                     <form id="searchform"> <!-- Die Get Funktion wird in der ready funktion deklariert-->
                         <input type="text" name="searchInput"> <br>
-                        <button type="submit">Submit</button>
+                        <button type="submit">Submit</button> <button type="button" onclick="importFile()">Reset Filter</button>
                     </form>
                 </div>
 
             </div>
-
             <table id="example" class="display" width="100%" cellspacing="0">
                 <thead>
                 <tr>
@@ -59,9 +60,9 @@
                             <option value="Verein">Verein</option>
                             <option value="Projekte">Projekte</option>
                         </select></br>
-
+                        <button type="submit">Submit</button>
                     </form>
-                    <form id="filterFormWord" action="/filterFormWord" method="post">
+                    <form id="filterFormTheme" action="/filterFormTheme" method="post">
                         <label for="filterOptionTheme">Filter Options Thema</label>
                         <select id="filterOptionTheme" name="filterOptionTheme">
                             <option value="Freizeit">Freizeit</option>
@@ -71,9 +72,26 @@
                             <option value="Kultur">Kultur</option>
                             <option value="Krankenhaus">Krankenhaus</option>
                         </select></br>
-                        <button type="submit">Submit</button>
+                        <button type="submit">Submit</button></br>
                     </form>
                 </div>
+                <button type="button" onclick="importFile()">Reset Filter</button>
+            </div>
+        </div>
+
+        <div class="sidebar-pane" id="contribute">
+            <h1 class="sidebar-header">Contribute<span class="sidebar-close"><i
+                    class="fa fa-caret-left"></i></span></h1>
+            <p>Add a new institution or choose an institution to edit.</p>
+                    <div id = "institution">
+                    </div>
+        </div>
+
+        <div class="sidebar-pane" id="info">
+            <h1 class="sidebar-header">Information<span class="sidebar-close"><i
+                    class="fa fa-caret-left"></i></span></h1>
+            <p>Click on an institution in the map to display more information.</p>
+            <div id = "informationInfo">
             </div>
         </div>
 
@@ -83,7 +101,7 @@
                 <form id="createLink">
                     <script type="text/javascript">
                         function Copy() {
-                            var Url = document.getElementById("paste-box");
+                            let Url = document.getElementById("paste-box");
                             Url.value = window.location.href;
                             Url.focus();
                             Url.select();
@@ -113,13 +131,14 @@
 <div id="map" class="sidebar-map"></div>
 
 <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/esri-leaflet"></script>
 <script src="../js/leaflet-sidebar.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.9/leaflet-routing-machine.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/perliedman-leaflet-control-geocoder/1.6.0/Control.Geocoder.min.js"></script>
 <script src="https://www.promisejs.org/polyfills/promise-7.0.4.min.js"></script>
-<script src="../js/JSONparse.js"></script>
-<script src="../js/leafletembed.js"></script>
+<script src="../js/dataParser.js"></script>
+<script src="../js/map.js"></script>
 <script src="../js/drawOptions.js"></script>
 <script src="../js/handleSearchResult.js"></script>
 <script src="../js/index.js"></script>

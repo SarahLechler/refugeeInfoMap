@@ -1,5 +1,5 @@
 let map = L.map('map');
-map.setView([51.993330, 7.648760], 9);
+map.setView([51.993330, 7.648760], 11);
 
 
 let whiteAndBlack =     //adding black and white background map
@@ -49,8 +49,10 @@ let createGeojsonFeaturen = (entry) => {
     return geojsonFeature;
 };
 
+let fileImported = false;
+let jsonLayer;
 let importFile = () => {
-    let jsonLayer = L.geoJSON('', {
+    jsonLayer = L.geoJSON('', {
         id: 'jsonLayer',
 
     }).bindPopup(function (layer) {
@@ -58,13 +60,18 @@ let importFile = () => {
     }).addTo(map);
     let jsonData = getJsonData();
 
-
-    $.when((jsonData !== undefined)).then(
-        jsonData.forEach((entry) => {
-            let geojsonFeature = createGeojsonFeaturen(entry);
-            jsonLayer.addData(geojsonFeature)
-        }))
-
+    $(document).ajaxComplete((event, xhr, settings) => {
+        debugger;
+        if (settings.url === '../json/mapData.json') {
+            jsonData = xhr.responseJSON;
+            jsonData.forEach((entry) => {
+                    let geojsonFeature = createGeojsonFeaturen(entry);
+                    jsonLayer.addData(geojsonFeature)
+                }
+            )
+        }
+    });
+    fileImported = true;
 
 };
 
@@ -84,22 +91,29 @@ let addRouting = () => {
     }).addTo(map);
 };
 
-//addRouting();
-
 let updateDisplayedData = (entries) => {
-    debugger;
     let jsonFeatureArray = [];
-    map.eachLayer((layer) => {
-        if (layer.feature) {
-            entries.forEach(entrie => {
-                if (layer.feature.properties.name === entrie.Name) {
-                    jsonFeatureArray.push(layer)
-                }
-            })
-            map.removeLayer(layer);
-        }
+    if (!fileImported) {
+        importFile();
+    }
+    jsonLayer.eachLayer((layer) => {
+        entries.forEach(entry => {
+            if (layer.feature.properties.name === entry.Name) {
+                jsonFeatureArray.push(layer)
+            }
+        });
+        map.removeLayer(layer);
     });
     jsonFeatureArray.forEach(feature => {
         map.addLayer(feature);
-    })
-}
+    });
+    fileImported = false;
+};
+
+let openPopup = (name) => {
+    jsonLayer.eachLayer((layer) => {
+        if (layer.feature.properties.name === name) {
+            layer.openPopup();
+        }
+    });
+};

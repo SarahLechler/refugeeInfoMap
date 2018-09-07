@@ -7,16 +7,15 @@ function tableButton(res) {
         data: res,          // searching through given data (res) by column and strings
         destroy: true,      // delete initialized table to enable reinitialization for a new search query
         columns: [
-            {data: 'name'}
+            {data: 'Name'}
         ],
-        "order": [[1, "desc"]]      // Ordering by date
     });
-    addPreview(res);        //Adding the footprint of all search results to the map
+    updateDisplayedData(res);        //Adding the footprint of all search results to the map
 
 
     $('#example').on('click', 'tr', function () {
-        var table = $('#example').DataTable();
-        var datastring = this.children[1].innerText;
+        let table = $('#example').DataTable();
+        let name = this.children[0].innerText;
         if ($(this).hasClass('selected')) {   //Selection highlighting of one dataset in the table
             $(this).removeClass('selected');
         }
@@ -24,8 +23,6 @@ function tableButton(res) {
             table.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
         }
-
-        var pathbase = '/home/s_lech05/JamaSato/IMG/' + datastring;
-        $('#dir')[0].value = pathbase;
+        openPopup(name);
     });
 }
