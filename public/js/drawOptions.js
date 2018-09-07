@@ -8,7 +8,7 @@ let addContributionLayer = () => {
         editable: true,
     }).addTo(map);
     contributionLayer.bindPopup(function (layer) {
-        return L.Util.template('<p>{Name}<br><button onclick = "editInstitution()">edit</button><button onclick = "deleteInstitution()">delete</button></p>', layer.feature.properties) //add link to more information!!
+        return L.Util.template('<p><b>Institution : </b>{name}<br><b><button onclick = "editInstitution()">edit</button><button onclick = "deleteInstitution()">delete</button></p>', layer.feature.properties);
     });
 
     contributionLayer.bringToFront();
@@ -31,15 +31,15 @@ let addFeatureInstitution = () => {
             coordinates: [lon, lat]
         },
         properties: {
-            Name: document.getElementById("name").value,
-            Adress: document.getElementById("adress").value,
-            Kategorie: document.getElementById("category").value,
-            Thema: document.getElementById("theme").value,
-            Beschreibung: document.getElementById("descript").value,
-            Website: document.getElementById("website").value,
-            Telefon: document.getElementById("telefon").value,
-            Mail: document.getElementById("mail").value,
-            Schlagworte: document.getElementById("words").value
+            name: document.getElementById("name").value,
+            adress: document.getElementById("adress").value,
+            kategorie: document.getElementById("category").value,
+            thema: document.getElementById("theme").value,
+            beschreibung: document.getElementById("descript").value,
+            website: document.getElementById("website").value,
+            telefon: document.getElementById("telefon").value,
+            mail: document.getElementById("mail").value,
+            schlagworte: document.getElementById("words").value
         }
     };
     contributionLayer.addFeature(feature, function (error, response) {
@@ -53,13 +53,11 @@ let addFeatureInstitution = () => {
     $('div #sidebar').addClass('collapsed');
 
     contributionLayer.bindPopup(function (layer) {
-        return L.Util.template('<p><b>Institution : </b>{Name}<br><b><button onclick = "editInstitution()">edit</button><button onclick = "deleteInstitution()">delete</button></p>', layer.feature.properties);
+        return L.Util.template('<p><b>Institution : </b>{name}<br><b><button onclick = "editInstitution()">edit</button><button onclick = "deleteInstitution()">delete</button></p>', layer.feature.properties);
     });
-}
+};
 
 let editInstitution = () => {
-    $('div #sidebar').removeClass('collapsed');
-    $('div #contribute').addClass('active');
 
     document.getElementById('institution').innerHTML = '';
 
@@ -122,11 +120,16 @@ let editInstitution = () => {
         '<input type="hidden" min="0" placeholder="Y" class="form-control" id="y" name="y">' +
         '</div>' +
         '<div class="form-group-pop-up">' +
-        '<div style="text-align:center;" class="col-xs-4 col-xs-offset-2"><button type="button" class="btn">Cancel</button></div>' +
+        '<div style="text-align:center;" class="col-xs-e4 col-xs-offset-2"><button type="button" class="btn">Cancel</button></div>' +
         '<div style="text-align:center;" class="col-xs-4"><button type="button" value="button" class="btn btn-primary trigger-submit" onclick="updateInstitution()">Submit</button></div>' +
         '</div>' +
         '</form>';
-    layer.bindPopup(popupContent).openPopup();
+
+    if($('div #sidebar').hasClass('collapsed')) {
+        $('div #sidebar').removeClass('collapsed');
+    }
+    $('div #contribute').addClass('active');
+
     $(popupContent).appendTo('#institution');
 
     $('#name').val(name);
@@ -150,15 +153,15 @@ let updateInstitution = () => {
             coordinates: [lon, lat]
         },
         properties: {
-            Name: document.getElementById("name").value,
-            Adress: document.getElementById("adress").value,
-            Kategorie: document.getElementById("category").value,
-            Thema: document.getElementById("theme").value,
-            Beschreibung: document.getElementById("descript").value,
-            Website: document.getElementById("website").value,
-            Telefon: document.getElementById("telefon").value,
-            Mail: document.getElementById("mail").value,
-            Schlagworte: document.getElementById("words").value
+            name: document.getElementById("name").value,
+            adress: document.getElementById("adress").value,
+            kategorie: document.getElementById("category").value,
+            thema: document.getElementById("theme").value,
+            beschreibung: document.getElementById("descript").value,
+            website: document.getElementById("website").value,
+            telefon: document.getElementById("telefon").value,
+            mail: document.getElementById("mail").value,
+            schlagworte: document.getElementById("words").value
         }
     };
 
@@ -169,7 +172,6 @@ let updateInstitution = () => {
             console.log('Successfully updated feature ' + feature.id);
         }
     });
-    map.closePopup();
 };
 
 let deleteInstitution = ()=> {
@@ -181,7 +183,7 @@ let deleteInstitution = ()=> {
         }
     });
     map.closePopup();
-}
+};
 
 let addDrawControl = () => {
     addContributionLayer();
@@ -283,3 +285,12 @@ let addDrawControl = () => {
 };
 
 addDrawControl();
+
+let filterContributionLayer = (type, filtervalue) =>{
+    if(type === "thema") {
+        contributionLayer.setWhere("thema=filtervalue")
+    }
+    if(type === "category"){
+        contributionLayer.setWhere("kategorie=filtervalue")
+    }
+}

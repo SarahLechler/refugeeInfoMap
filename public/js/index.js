@@ -42,7 +42,6 @@ $(document).ready(function () {
             statusCode: {
                 500: function () {
                     console.error("Object not found");
-                    debugger;
                 }
             },
             data: $(that).serialize(),
@@ -51,11 +50,12 @@ $(document).ready(function () {
             // Dynamically create Request URL by appending requested name to /api prefix
             url: '/filterFormCatagory',
             error: function (xhr, status, err) {
-                debugger;
                 console.log(err);
             },
             success: function (res) {
-                updateDisplayedData(res)
+                updateDisplayedData(res);
+                let filtervalue = document.getElementById('filterOptions').value;
+                filterContributionLayer('category', filtervalue);
             }
         });
     });
@@ -68,7 +68,6 @@ $(document).ready(function () {
             statusCode: {
                 500: function () {
                     console.error("Object not found");
-                    debugger;
                 }
             },
             data: $(that).serialize(),
@@ -77,20 +76,14 @@ $(document).ready(function () {
             // Dynamically create Request URL by appending requested name to /api prefix
             url: '/filterFormTheme',
             error: function (xhr, status, err) {
-                debugger;
                 console.log(err);
             },
             success: function (res) {
-                updateDisplayedData(res)
+                updateDisplayedData(res);
+                let filtervalue = document.getElementById('filterOptionTheme').value;
+                filterContributionLayer('theme', filtervalue);
             }
         });
     });
-
-
-    /**
-     * @desc AJAX.GET to overwrite submit of the brighness form.
-     *       passes min and max colour values and path to the layer to the server
-     * @return path to layer or error
-     **/
 });
 

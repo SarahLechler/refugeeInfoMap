@@ -34,12 +34,15 @@ L.control.layers(baseMaps, overlaymaps).addTo(map);
 let sidebar = L.control.sidebar('sidebar').addTo(map);
 
 let createGeojsonFeaturen = (entry) => {
+    let featureAttributes = JSON.stringify(entry);
     let geojsonFeature = {
         "type": "Feature",
         "properties": {
             "name": entry.Name,
             "amenity": entry.Name,
-            "popupContent": entry.Beschreibung
+            "entry": entry,
+            "popupContent": '<p><b>Institution : </b>' + entry.Name + '<br><button data-id="' + entry.Name + '" id="infoButton" onclick="openLayerInformation()">mehr Informationen</button>'
+
         },
         "geometry": {
             "type": "Point",
@@ -64,7 +67,6 @@ let importFile = () => {
         let jsonData = getJsonData();
 
         $(document).ajaxComplete((event, xhr, settings) => {
-            debugger;
             if (settings.url === '../json/mapData.json' & initialization) {
                 jsonData = xhr.responseJSON;
                 jsonData.forEach((entry) => {
@@ -104,7 +106,6 @@ let updateDisplayedData = (entries) => {
         importFile();
         let filterLayer = true;
         $(document).ajaxComplete((event, xhr, settings) => {
-            debugger;
             if (settings.url === '../json/mapData.json' & filterLayer) {
                 jsonLayer.eachLayer((layer) => {
                     entries.forEach(entry => {
@@ -148,4 +149,32 @@ let openPopup = (name) => {
             layer.openPopup();
         }
     });
+};
+
+let resetMapContent = () => {
+    if (contributionLayer) {
+        contributionLayer.refresh();
+    }
+    importFile()
+};
+
+let openLayerInformation = () => {
+    let name = $('#infoButton').attr('data-id');
+    jsonLayer.eachLayer(layer => {
+        if (layer.feature.properties.name === name) {
+            if ($('div #sidebar').hasClass('collapsed')) {
+                $('div #sidebar').removeClass('collapsed');
+            }
+            $('div #info').addClass('active');
+            let infos = '<div><p><b>Name:</b> ' + layer.feature.properties.name + '<br>' +
+                '<b>Addresse:</b> ' + layer.feature.properties.entry.Adress + '<br>' +
+                '<b>Beschreibung:</b> ' + layer.feature.properties.entry.Beschreibung + '<br>' +
+                '<b>Website:</b> ' + layer.feature.properties.entry.Website + '<br>' +
+                '<b>Telefon:</b> ' + layer.feature.properties.entry.Telefon + '<br>' +
+                /* + '<b>E-Mail:</b> '+layer.feature.properties.entry.E-Mail+'<br>*/'</p></div>';
+            $('#informationInfo').empty();
+            $(infos).appendTo('#informationInfo');
+            console.log("Hurray!!")
+        }
+    })
 };

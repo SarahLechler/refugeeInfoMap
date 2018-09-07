@@ -1,5 +1,4 @@
 let filterData = (searcheCategory) => {
-    debugger;
     let result = []
     testing.forEach(entry => {
         if (entry.Kategorie.indexOf(',') > -1) {
