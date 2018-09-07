@@ -50,29 +50,34 @@ let createGeojsonFeaturen = (entry) => {
 };
 
 let fileImported = false;
+
 let jsonLayer;
 let importFile = () => {
-    jsonLayer = L.geoJSON('', {
-        id: 'jsonLayer',
+    let initialization = true;
+    if (!fileImported) {
+        jsonLayer = L.geoJSON('', {
+            id: 'jsonLayer',
 
-    }).bindPopup(function (layer) {
-        return layer.feature.properties.popupContent;
-    }).addTo(map);
-    let jsonData = getJsonData();
+        }).bindPopup(function (layer) {
+            return layer.feature.properties.popupContent;
+        }).addTo(map);
+        let jsonData = getJsonData();
 
-    $(document).ajaxComplete((event, xhr, settings) => {
-        debugger;
-        if (settings.url === '../json/mapData.json') {
-            jsonData = xhr.responseJSON;
-            jsonData.forEach((entry) => {
-                    let geojsonFeature = createGeojsonFeaturen(entry);
-                    jsonLayer.addData(geojsonFeature)
-                }
-            )
-        }
-    });
-    fileImported = true;
+        $(document).ajaxComplete((event, xhr, settings) => {
+            debugger;
+            if (settings.url === '../json/mapData.json' & initialization) {
+                jsonData = xhr.responseJSON;
+                jsonData.forEach((entry) => {
+                        let geojsonFeature = createGeojsonFeaturen(entry);
+                        jsonLayer.addData(geojsonFeature)
+                    }
+                );
+                initialization = false;
+            }
 
+        });
+        fileImported = true;
+    }
 };
 
 importFile();
@@ -94,19 +99,46 @@ let addRouting = () => {
 let updateDisplayedData = (entries) => {
     let jsonFeatureArray = [];
     if (!fileImported) {
+        jsonLayer.clearLayers();
+        map.removeLayer(jsonLayer);
         importFile();
-    }
-    jsonLayer.eachLayer((layer) => {
-        entries.forEach(entry => {
-            if (layer.feature.properties.name === entry.Name) {
-                jsonFeatureArray.push(layer)
+        let filterLayer = true;
+        $(document).ajaxComplete((event, xhr, settings) => {
+            debugger;
+            if (settings.url === '../json/mapData.json' & filterLayer) {
+                jsonLayer.eachLayer((layer) => {
+                    entries.forEach(entry => {
+                        if (layer.feature.properties.name === entry.Name) {
+                            jsonFeatureArray.push(layer)
+                        }
+                    });
+                    jsonLayer.removeLayer(layer);
+                });
+                jsonFeatureArray.forEach(feature => {
+                    if (!jsonLayer.hasLayer(feature)) {
+                        jsonLayer.addData(feature.feature);
+                    }
+                });
+                filterLayer = false;
+            }
+
+        });
+    } else {
+        jsonLayer.eachLayer((layer) => {
+            entries.forEach(entry => {
+                if (layer.feature.properties.name === entry.Name) {
+                    jsonFeatureArray.push(layer)
+                }
+            });
+            jsonLayer.removeLayer(layer);
+        });
+        jsonFeatureArray.forEach(feature => {
+            if (!jsonLayer.hasLayer(feature)) {
+                jsonLayer.addData(feature.feature);
             }
         });
-        map.removeLayer(layer);
-    });
-    jsonFeatureArray.forEach(feature => {
-        map.addLayer(feature);
-    });
+    }
+    console.log(jsonLayer);
     fileImported = false;
 };
 
