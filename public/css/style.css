@@ -86,6 +86,17 @@ footer{
   margin-top:30px;
 }
 
+p {
+  margin: 10px 0 10px;
+}
+
+button {
+  color: white;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+  margin-top: 5px
+}
+
 .form-group-pop-up{
   padding-top: 0px;
   padding-bottom: 0px;
