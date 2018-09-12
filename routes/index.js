@@ -12,9 +12,13 @@ function ensureAuthenticated(req, res, next){
 		return next();
 	} else {
 		//req.flash('error_msg','You are not logged in');
-		res.redirect('/users/login');
+		res.redirect('/map');
 	}
 }
+
+router.get('/map', function(req, res){
+    res.render('indexWithoutLogin');
+});
 
 /**
 * @desc AJAX.GET on server for sending a search request
@@ -32,6 +36,24 @@ router.get('/search', function (req, res) {
     } else res.send("nothing found")
 });
 
+
+/**
+ * @desc AJAX.GET on server for sending a search request
+ *       takes a SearchString
+ *       and passes it to the search function
+ *       url format: /search
+ * @return entries or error
+ */
+router.get('/bbox', function (req, res) {
+    console.log(req.query.bbox);
+    let searchString = req.query.bbox;
+    let erg = search.searchbox(searchString);
+    console.log(erg);
+    if(erg !== []){
+        console.log(erg);
+        res.json(erg);
+    } else res.send("nothing found")
+});
 
 /**
  * @desc AJAX.GET on server for sending a filter request

@@ -10,7 +10,7 @@ to this map and add institutions and information about that institutions. All op
 
 Refugee Info Map requires [Node.js](https://nodejs.org/) v4+ to run.
 
-###### Configuration Propertied
+###### Configuration Properties
  | Property                       | Type     | Possible Values               | Default            | Description                          |
  |--------------------------------|----------|-------------------------------|--------------------|--------------------------------------|
  | routing                        | Boolean  |```true``` &#124; ```false```  |                    | Rounting added to the app            |
@@ -20,6 +20,8 @@ Refugee Info Map requires [Node.js](https://nodejs.org/) v4+ to run.
  | credential.Mail                | String   |                               |                    | Mail of provider contact             |
  | specifyEntriesToLocation       | Boolean  |```true``` &#124; ```false```  |                    | Specify to one location?             |
  | boundingBox                    | Array    |                               |                    | Array of Coordinates                 |
+
+###### NPM initiation and start
 
 ```sh
 $ npm install

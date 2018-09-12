@@ -1,0 +1,12 @@
+
+[{
+  "routing": false,
+  "logIn": true,
+  "contribution": true,
+  "credential": {
+    "Name": "Sarah Lechler",
+    "Mail": "s.lechler@uni-muenster.de"
+  },
+  "specifyEntriesToLocation":false,
+  "boundingBox": []
+}]

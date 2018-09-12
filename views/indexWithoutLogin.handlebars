@@ -4,7 +4,6 @@
         <ul role="tablist">
             <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
             <li id = 'filterTab'><a href="#filter" role="tab"><i class="fa fa-filter"></i></a></li>
-            <li id="contributeLI"><a href="#contribute" role="tab"><i class="fa fa-edit"></i></a></li>
             <li id = 'infoTab'><a href="#info" role="tab"><i class="fa fa-info"></i></a></li>
             <li><a href="#link" role="tab"><i class="fa fa-envelope"></i></a></li>
             <li><a href="#git" role="tab"><i class="fa fa-github"></i></a></li>
@@ -79,26 +78,29 @@
                     </form>
                 </div>
                 <div>
-                    <button type="button" onclick="resetMapContent()">Filter zuruecksetzen</button>
+                    <button type="button" onclick="resetMapContent()">Filter zurücksetzen</button>
                 </div>
             </div>
         </div>
 
-        <div class="sidebar-pane" id="contribute">
-            <h1 class="sidebar-header">Beitragen<span class="sidebar-close"><i
+        <div class="sidebar-pane" id="info">
+            <h1 class="sidebar-header">Informationen<span class="sidebar-close"><i
                     class="fa fa-caret-left"></i></span></h1>
-            <p>Hier können Sie zur Informationen zur Karte beitragen. Um eine neue Institution hinzuzufügen, setzen Sie einen Marker in der Karte. Um eine Institution zu ändern, klicken sie in einem Pop-Uo auf editieren</p>
-            <div id="institution">
+            <p>Klicken Sie in der Karte auf ein Pop-up, um sich Informationen anzeigen zu lassen.</p>
+            <div id="informationInfo">
+            </div>
+
+            <div class = "hidden" id="institution">
                 <form role="contributionForm" id="contributionForm" enctype="multipart/form-data"
                       class="form-horizontal">
                     <!-- onsubmit="addMarker(name, adress, category, theme, descript, website, mail, telefon, words, x, y)"-->
                     <div class="form-group-pop-up">
                         <label class="control-label col-sm-5"><strong>Name: </strong></label>
-                        <input type="text" placeholder="Name" id="name" name="name" class="form-control"/>
+                        <input type="text" placeholder="Name" vale="name" id="name" name="name" class="form-control"/>
                     </div>
                     <div class="form-group-pop-up">
-                        <label class="control-label col-sm-5"><strong>Adress: </strong></label>
-                        <input type="text" placeholder="Adress" id="adress" name="adress" class="form-control"/>
+                        <label class="control-label col-sm-5"><strong>Adresse: </strong></label>
+                        <input type="text" vale="name" placeholder="Adress" id="adress" name="adress" class="form-control"/>
                     </div>
                     <div class="form-group-pop-up">
                         <label class="control-label col-sm-5"><strong>Kategorie: </strong></label>
@@ -125,26 +127,26 @@
                     <div class="form-group-pop-up">
                         <label class="control-label col-sm-5"><strong>Beschreibung: </strong></label>
                         <textarea class="form-control" rows="6" placeholder="Beschreibung" id="descript"
-                                  name="descript">...</textarea>
+                                  name="descript" vale="name" >...</textarea>
                     </div>
                     <div class="form-group-pop-up">
                         <label class="control-label col-sm-5"><strong>Website: </strong></label>
                         <input type="text" min="0" placeholder="Website" class="form-control" id="website"
-                               name="website">
+                               name="website" vale="name">
                     </div>
                     <div class="form-group-pop-up">
                         <label class="control-label col-sm-5"><strong>E-Mail: </strong></label>
-                        <input type="e-mail" min="0" placeholder="E-Mail" class="form-control" id="mail" name="mail">
+                        <input type="e-mail" min="0" placeholder="E-Mail" class="form-control" id="mail" name="mail" vale="name">
                     </div>
                     <div class="form-group-pop-up">
                         <label class="control-label col-sm-5"><strong>Telefon: </strong></label>
                         <input type="number" min="0" placeholder="Telefon" class="form-control" id="telefon"
-                               name="telefon">
+                               name="telefon" vale="name">
                     </div>
                     <div class="form-group-pop-up">
                         <label class="control-label col-sm-5"><strong>Schlagwörter: </strong></label>
                         <input type="text" min="0" placeholder="Schlagwörter" class="form-control" id="words"
-                               name="words">
+                               name="words" vale="name">
                     </div>
                     <div class="form-group-pop-up">
                         <input type="hidden" min="0" placeholder="X" class="form-control" id="x" name="x">
@@ -165,14 +167,7 @@
                     </div>
                 </form>
             </div>
-        </div>
 
-        <div class="sidebar-pane" id="info">
-            <h1 class="sidebar-header">Informationen<span class="sidebar-close"><i
-                    class="fa fa-caret-left"></i></span></h1>
-            <p>Klicken Sie in der Karte auf ein Pop-up, um sich Informationen anzeigen zu lassen.</p>
-            <div id="informationInfo">
-            </div>
         </div>
 
         <div class="sidebar-pane" id="link">
@@ -197,13 +192,12 @@
 <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
 <script src="https://unpkg.com/esri-leaflet"></script>
 <script src="../js/leaflet-sidebar.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.9/leaflet-routing-machine.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/perliedman-leaflet-control-geocoder/1.6.0/Control.Geocoder.min.js"></script>
 <script src="https://www.promisejs.org/polyfills/promise-7.0.4.min.js"></script>
 <script src="../js/dataParser.js"></script>
 <script src="../js/map.js"></script>
-<script src="../js/drawOptions.js"></script>
+<script src="../js/withoutLogin.js"></script>
 <script src="../js/mapConfig.js"></script>
 <script src="../js/handleSearchResult.js"></script>
 <script src="../js/index.js"></script>

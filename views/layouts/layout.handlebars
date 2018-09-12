@@ -40,13 +40,14 @@
 <div class="container">
     <div class="header clearfix">
         <nav>
-            <ul class="nav nav-pills pull-right">
+            <ul class="nav nav-pills pull-right" id="logIn">
                 {{#if user}}
                     <li role="presentation"><a href="/">Map</a></li>
-                    <li role="presentation"><a href="/users/logout">Logout</a></li>
+                    <li role="presentation"><a href="/users/logout">Ausloggen</a></li>
                 {{else}}
-                    <li role="presentation"><a href="/users/login">Login</a></li>
-                    <li role="presentation"><a href="/users/register">Register</a></li>
+                    <li role="presentation"><a href="/map">Map</a></li>
+                    <li role="presentation"><a href="/users/login">Einloggen</a></li>
+                    <li role="presentation"><a href="/users/register">Registrieren</a></li>
                 {{/if}}
             </ul>
         </nav>

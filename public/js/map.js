@@ -26,7 +26,7 @@ let baseMaps = {
 
 let overlaymaps = {
     //"Layer": lyr
-}
+};
 
 L.control.layers(baseMaps, overlaymaps).addTo(map);
 
@@ -86,15 +86,22 @@ importFile();
 
 let addRouting = () => {
 
-    let geocoder = new L.Control.geocoder;
+    let geocoder = new L.Control.geocoder({
+        defaultMarkGeocode: false,
+        placeholder: "Suche..",
+        errorMessage: "Es wurde nichts gefunden",
+        geocoder: L.Control.Geocoder.nominatim()
+    });
     geocoder.addTo(map);
 
     L.Routing.control({
-        waypoints: [
+        waypoints: [/*
             L.latLng(57.74, 11.94),
-            L.latLng(57.6792, 11.949)
+            L.latLng(57.6792, 11.949)*/
         ],
-        geocoder: L.Control.Geocoder.nominatim()
+        geocoder: L.Control.Geocoder.nominatim(),
+        collapsible: true,
+        show: false
     }).addTo(map);
 };
 
@@ -140,6 +147,11 @@ let updateDisplayedData = (entries) => {
         });
     }
     console.log(jsonLayer);
+    if (!$('div #sidebar').hasClass('collapsed')) {
+        $('div #sidebar').addClass('collapsed');
+    }
+    $('div #filter').removeClass('active');
+    $('div #filterTab').removeClass('active');
     fileImported = false;
 };
 
@@ -153,28 +165,57 @@ let openPopup = (name) => {
 
 let resetMapContent = () => {
     if (contributionLayer) {
-        contributionLayer.refresh();
+        contributionLayer.setWhere("");
     }
-    importFile()
+    importFile();
+
+    if (!$('div #sidebar').hasClass('collapsed')) {
+        $('div #sidebar').addClass('collapsed');
+    }
+    $('div #filter').removeClass('active');
+    $('li #filterTab').removeClass('active');
 };
 
 let openLayerInformation = () => {
     let name = $('#infoButton').attr('data-id');
-    jsonLayer.eachLayer(layer => {
-        if (layer.feature.properties.name === name) {
-            if ($('div #sidebar').hasClass('collapsed')) {
-                $('div #sidebar').removeClass('collapsed');
+    $('div #info').addClass('active');
+    $('li #infoTab').addClass('active');
+    if ($('div #sidebar').hasClass('collapsed')) {
+        $('div #sidebar').removeClass('collapsed');
+    }
+    if (name === 'contributedInstitution') {
+        let infos = '<div><p><b>Name:</b> ' + document.getElementById("name").value + '<br>' +
+            '<b>Addresse:</b> ' + document.getElementById("adress").value + '<br>' +
+            '<b>Beschreibung:</b> ' + document.getElementById("descript").value + '<br>' +
+            '<b>Website:</b> <a href="' + document.getElementById("website").value + ' ">' + document.getElementById("website").value + '</a><br>' +
+            '<b>Telefon:</b> ' + document.getElementById("telefon").value + '<br>' +
+            '<b>E-Mail:</b> ' + document.getElementById("mail").value + '<br></p></div>';
+        $('#informationInfo').empty();
+        $('#infos').appendTo('#informationInfo');
+
+    } else {
+        jsonLayer.eachLayer(layer => {
+            if (layer.feature.properties.name === name) {
+                let infos = '<div><p><b>Name:</b>' + layer.feature.properties.name + '<br>' +
+                    '<b>Addresse:</b>' + layer.feature.properties.entry.Adress + '<br>' +
+                    '<b>Beschreibung:</b>' + layer.feature.properties.entry.Beschreibung + '<br>' +
+                    '<b>Website:</b><a href="' + layer.feature.properties.entry.Website + ' ">' + layer.feature.properties.entry.Website + '</a><br>' +
+                    '<b>Telefon:</b>' + layer.feature.properties.entry.Telefon + '<br>' +
+                    /* + '<b>E-Mail:</b> '+layer.feature.properties.entry.E-Mail+'<br>*/'</p></div>';
+                $('#informationInfo').empty();
+                $(infos).appendTo('#informationInfo');
+                console.log("Hurray!!")
             }
-            $('div #info').addClass('active');
-            let infos = '<div><p><b>Name:</b> ' + layer.feature.properties.name + '<br>' +
-                '<b>Addresse:</b> ' + layer.feature.properties.entry.Adress + '<br>' +
-                '<b>Beschreibung:</b> ' + layer.feature.properties.entry.Beschreibung + '<br>' +
-                '<b>Website:</b> ' + layer.feature.properties.entry.Website + '<br>' +
-                '<b>Telefon:</b> ' + layer.feature.properties.entry.Telefon + '<br>' +
-                /* + '<b>E-Mail:</b> '+layer.feature.properties.entry.E-Mail+'<br>*/'</p></div>';
-            $('#informationInfo').empty();
-            $(infos).appendTo('#informationInfo');
-            console.log("Hurray!!")
-        }
-    })
+        })
+    }
 };
+
+let filterContributionLayer = (type, filtervalue) =>{
+    if(type === "thema") {
+        contributionLayer.setWhere("thema=filtervalue")
+    }
+    if(type === "category"){
+        contributionLayer.setWhere("kategorie=filtervalue")
+    }
+};
+

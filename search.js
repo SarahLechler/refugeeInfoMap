@@ -25,7 +25,6 @@ exports.search = function (input) {
 };
 
 /**
- * LF00010
  * @param the JSON we are checking
  * @param name we are searching for
  * @returns {true if it contains the name in its description}
@@ -36,7 +35,7 @@ function _searchname(Json, name) {
     let verg = name.toLowerCase();
     let includes = false;
     if (h.includes(verg)) {
-        includes=true;
+        includes = true;
     }
     let wordArray = Json.Schlagworte;
     if (wordArray.indexOf(',') > -1) {
@@ -44,10 +43,10 @@ function _searchname(Json, name) {
         searchArray.forEach((searchArrayEntry, index, array) => {
             array[index] = searchArrayEntry.replace(/\s+/g, '');
         });
-        searchArray.forEach(word =>{
+        searchArray.forEach(word => {
             console.log(word.toLowerCase());
-            if((word.toLowerCase().includes(verg))){
-                includes=true;
+            if ((word.toLowerCase().includes(verg))) {
+                includes = true;
             }
         })
     }
@@ -63,24 +62,8 @@ let Polygon = require('polygon');
  * @returns {a Array with the coordinats of the FOOTPINT}
  * @private
  */
-function _polygonstringtoarray1(footprint) {
-    let liste = [];
-    footprint = footprint.substring(9, footprint.length - 2);
-    let halfarray = footprint.split(",");
-    let i = 0;
-    while (i < halfarray.length) {
-        liste[i] = halfarray[i].split(" ");
-        if (i > 0) {
-            liste[i].shift();
-        }
-        i++;
-    }
-    return liste;
-
-}
-
-function _polygonstringtoarray2(box) {
-    box = box.substring(1, box.length - 1);
+function createPolygonVectors(box) {
+    //box = box.substring(1, box.length - 1);
     let boxliste = box.split(",");
     console.log(boxliste);
     let boxes = new Array(4);
@@ -99,33 +82,28 @@ function _polygonstringtoarray2(box) {
 }
 
 /**
- * LF00020
  * @param Json we are checking for the polygon
  * @param box = the box the user has drawn
  * @returns {true if this one is in the box}
  * @private
  */
 let i = 0;
+exports.searchbox = (bbox) => {
+    let liste = testing;
+    let erg = [];
+    liste.forEach(entry => {
+        let punkte = [entry.X, entry.Y];
+        let search = new Polygon(createPolygonVectors(bbox));
+        console.log(search);
+        if (search.containsPoint(punkte)) //if one contain the other one the BBox search is true
+        {
+            console.log(entry);
+            erg.push(entry);
+        }
+    })
 
-function _searchbox(Json, box) {
 
-    let punkte = Json.metadata[''].FOOTPRINT;
-    let current = new Polygon(_polygonstringtoarray1(punkte));
-    let search = new Polygon(_polygonstringtoarray2(box));
-
-    if (!current.contains(search) && !search.contains(current)) //if one contain the other one the BBox search is true
-    {
-        let help = current.union(search);
-        return (!help.equal(current) && !help.equal(search));
-    }
-    else {
-        i++;
-        console.log("i" + i);
-        return true;
-
-    }
-
-}
+};
 
 
 /**

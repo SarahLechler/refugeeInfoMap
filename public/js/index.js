@@ -25,7 +25,9 @@ $(document).ready(function () {
                 console.log(err);
             },
             success: function (res) {
-                tableButton(res)
+                updateDisplayedData(res);
+                let searchvalue = document.getElementById('searchInput').value;
+                searchContributionLayer(searchvalue);
             }
         });
     });

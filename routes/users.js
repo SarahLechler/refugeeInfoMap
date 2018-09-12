@@ -2,7 +2,6 @@ let express = require('express');
 let router = express.Router();
 let passport = require('passport');
 let LocalStrategy = require('passport-local').Strategy;
-
 let User = require('../models/user');
 
 // Register
@@ -24,12 +23,12 @@ router.post('/register', function (req, res) {
 	let password2 = req.body.password2;
 
 	// Validation
-	req.checkBody('name', 'Name is required').notEmpty();
-	req.checkBody('email', 'Email is required').notEmpty();
-	req.checkBody('email', 'Email is not valid').isEmail();
-	req.checkBody('username', 'Username is required').notEmpty();
-	req.checkBody('password', 'Password is required').notEmpty();
-	req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
+	req.checkBody('name', 'Name ist erforderlich').notEmpty();
+	req.checkBody('email', 'Email ist erforderlich').notEmpty();
+	req.checkBody('email', 'Email ist nicht gültig').isEmail();
+	req.checkBody('username', 'Benutzername is erforderlich').notEmpty();
+	req.checkBody('password', 'Passwort is erforderlich').notEmpty();
+	req.checkBody('password2', 'Passwoerter stimmen nicht überein').equals(req.body.password);
 
 	let errors = req.validationErrors();
 
@@ -63,7 +62,7 @@ router.post('/register', function (req, res) {
 						if (err) throw err;
 						console.log(user);
 					});
-         	req.flash('success_msg', 'You are registered and can now login');
+         	req.flash('success_msg', 'Sie sind registriert und können sich nun einloggen');
 					res.redirect('/users/login');
 				}
 			});
@@ -76,7 +75,7 @@ passport.use(new LocalStrategy(
 		User.getUserByUsername(username, function (err, user) {
 			if (err) throw err;
 			if (!user) {
-				return done(null, false, { message: 'Unknown User' });
+				return done(null, false, { message: 'Unbekannter Benutzer' });
 			}
 
 			User.comparePassword(password, user.password, function (err, isMatch) {
@@ -84,7 +83,7 @@ passport.use(new LocalStrategy(
 				if (isMatch) {
 					return done(null, user);
 				} else {
-					return done(null, false, { message: 'Invalid password' });
+					return done(null, false, { message: 'Ungueltiges Passwort' });
 				}
 			});
 		});
@@ -109,7 +108,7 @@ router.post('/login',
 router.get('/logout', function (req, res) {
 	req.logout();
 
-	req.flash('success_msg', 'You are logged out');
+	req.flash('success_msg', 'Sie sind nun ausgeloggt');
 
 	res.redirect('/users/login');
 });

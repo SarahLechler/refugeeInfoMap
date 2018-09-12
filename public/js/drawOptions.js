@@ -8,7 +8,7 @@ let addContributionLayer = () => {
         editable: true,
     }).addTo(map);
     contributionLayer.bindPopup(function (layer) {
-        return L.Util.template('<p><b>Institution : </b>{name}<br><b><button onclick = "editInstitution()">edit</button><button onclick = "deleteInstitution()">delete</button></p>', layer.feature.properties);
+        return L.Util.template('<p><b>Institution : </b>{name}<br><b><button data-id=contributedInstitution id="infoButton" onclick="openLayerInformation()">mehr Informationen</button><br><button onclick = "editInstitution()">edit</button><button onclick = "deleteInstitution()">delete</button></p>', layer.feature.properties);
     });
 
     contributionLayer.bringToFront();
@@ -21,6 +21,10 @@ let addContributionLayer = () => {
     });
 };
 
+/**
+ * @returns {true if it contains the name in its description}
+ * @private
+ */
 let addFeatureInstitution = () => {
     console.log(lon);
     console.log(lat);
@@ -53,94 +57,31 @@ let addFeatureInstitution = () => {
     $('div #sidebar').addClass('collapsed');
 
     contributionLayer.bindPopup(function (layer) {
-        return L.Util.template('<p><b>Institution : </b>{name}<br><b><button onclick = "editInstitution()">edit</button><button onclick = "deleteInstitution()">delete</button></p>', layer.feature.properties);
+        return L.Util.template('<p><b>Institution : </b>{name}<br><b><button data-id="contributedInstitution" id="infoButton" onclick="openLayerInformation()">mehr Informationen</button><br><button id = "editInstitution" onclick = "editInstitution()">edit</button><button onclick = "deleteInstitution()">delete</button></p>', layer.feature.properties);
     });
 };
 
+map.on('popupopen', e =>{
+    $('#name').val(e.popup._source.feature.properties.name);
+    $('#adress').val(e.popup._source.feature.properties.adress);
+    $('#category').val(e.popup._source.feature.properties.category);
+    $('#theme').val(e.popup._source.feature.properties.theme);
+    $('#descript').val(e.popup._source.feature.properties.beschreibung);
+    $('#website').val(e.popup._source.feature.properties.website);
+    $('#telefon').val(e.popup._source.feature.properties.telefon);
+    $('#mail').val(e.popup._source.feature.properties.mail);
+    $('#words').val(e.popup._source.feature.properties.words);
+});
+
 let editInstitution = () => {
-
-    document.getElementById('institution').innerHTML = '';
-
-    let popupContent = '<form role="contributionForm" id="contributionForm" enctype="multipart/form-data" class = "form-horizontal">' + // onsubmit="addMarker(name, adress, category, theme, descript, website, mail, telefon, words, x, y)"
-        '<div class="form-group-pop-up">' +
-        '<label class="control-label col-sm-5"><strong>Name: </strong></label>' +
-        '<input type="text" placeholder="Name" id="name" name="name" class="form-control"/>' +
-        '</div>' +
-        '<div class="form-group-pop-up">' +
-        '<label class="control-label col-sm-5"><strong>Adress: </strong></label>' +
-        '<input type="text" placeholder="Adress" id="adress" name="adress" class="form-control"/>' +
-        '</div>' +
-        '<div class="form-group-pop-up">' +
-        '<label class="control-label col-sm-5"><strong>Kategorie: </strong></label>' +
-        '<select class="form-control" id="category" name="category">' +
-        '<option value="Behoerde">Behoerde</option>' +
-        '<option value="Fluechtlingshilfe">Fluechtlingshilfe</option>' +
-        '<option value="Projekte">Projekte</option>' +
-        '<option value="Initiativen">Initiativen</option>' +
-        '<option value="Vereine">Vereine</option>' +
-        '<option value="Krankenhaus">Krankenhaus</option>' +
-        '</select>' +
-        '</div>' +
-        '<div class="form-group-pop-up">' +
-        '<label class="control-label col-sm-5"><strong>Themen: </strong></label>' +
-        '<select class="form-control" id="theme" name="theme">' +
-        '<option value="Freizeit">Freizeit</option>' +
-        '<option value="Beratung">Beratung</option>' +
-        '<option value="Bildung">Bildung</option>' +
-        '<option value="Treffpunkt">Treffpunkt</option>' +
-        '<option value="Kultur">Kultur</option>' +
-        '<option value="Krankenhaus">Krankenhaus</option>' +
-        '</select>' +
-        '</div>' +
-        //...
-        '<div class="form-group-pop-up">' +
-        '<label class="control-label col-sm-5"><strong>Beschreibung: </strong></label>' +
-        '<textarea class="form-control" rows="6" placeholder="Beschreibung" id="descript" name="descript">...</textarea>' +
-        '</div>' +
-        '<div class="form-group-pop-up">' +
-        '<label class="control-label col-sm-5"><strong>Website: </strong></label>' +
-        '<input type="text" min="0" placeholder="Website" class="form-control" id="website" name="website">' +
-        '</div>' +
-        '<div class="form-group-pop-up">' +
-        '<label class="control-label col-sm-5"><strong>E-Mail: </strong></label>' +
-        '<input type="e-mail" min="0" placeholder="E-Mail" class="form-control" id="mail" name="mail">' +
-        '</div>' +
-        '<div class="form-group-pop-up">' +
-        '<label class="control-label col-sm-5"><strong>Telefon: </strong></label>' +
-        '<input type="number" min="0" placeholder="Telefon" class="form-control" id="telefon" name="telefon">' +
-        '</div>' +
-        '<div class="form-group-pop-up">' +
-        '<label class="control-label col-sm-5"><strong>Schlagwörter: </strong></label>' +
-        '<input type="text" min="0" placeholder="Schlagwörter" class="form-control" id="words" name="words">' +
-        '</div>' +
-        '<div class="form-group-pop-up">' +
-        '<input type="hidden" min="0" placeholder="X" class="form-control" id="x" name="x">' +
-        '</div>' +
-        '<div class="form-group-pop-up">' +
-        '<input type="hidden" min="0" placeholder="Y" class="form-control" id="y" name="y">' +
-        '</div>' +
-        '<div class="form-group-pop-up">' +
-        '<div style="text-align:center;" class="col-xs-e4 col-xs-offset-2"><button type="button" class="btn">Cancel</button></div>' +
-        '<div style="text-align:center;" class="col-xs-4"><button type="button" value="button" class="btn btn-primary trigger-submit" onclick="updateInstitution()">Submit</button></div>' +
-        '</div>' +
-        '</form>';
 
     if($('div #sidebar').hasClass('collapsed')) {
         $('div #sidebar').removeClass('collapsed');
     }
     $('div #contribute').addClass('active');
 
-    $(popupContent).appendTo('#institution');
 
-    $('#name').val(name);
-    $('#adress').val(adress);
-    $('#category').val(category);
-    $('#theme').val(theme);
-    $('#descript').val(descript);
-    $('#website').val(website);
-    $('#telefon').val(telefon);
-    $('#mail').val(mail);
-    $('#words').val(words);
+
 };
 
 let updateInstitution = () => {
@@ -196,7 +137,8 @@ let addDrawControl = () => {
             polyline: false,
             polygon: false,
             circle: false, // Turns off this drawing tool
-            rectangle: false
+            rectangle: false,
+            circlemarker:false
         }
     });
 
@@ -253,7 +195,7 @@ let addDrawControl = () => {
             '</div>' +
             '<div class="form-group-pop-up">' +
             '<label class="control-label col-sm-5"><strong>Telefon: </strong></label>' +
-            '<input type="number" min="0" placeholder="Telefon" class="form-control" id="telefon" name="telefon">' +
+            '<input type="text" min="0" placeholder="Telefon" class="form-control" id="telefon" name="telefon">' +
             '</div>' +
             '<div class="form-group-pop-up">' +
             '<label class="control-label col-sm-5"><strong>Schlagwörter: </strong></label>' +
@@ -266,7 +208,7 @@ let addDrawControl = () => {
             '<input type="hidden" min="0" placeholder="Y" class="form-control" id="y" name="y">' +
             '</div>' +
             '<div class="form-group-pop-up">' +
-            '<div style="text-align:center;" class="col-xs-4 col-xs-offset-2"><button type="button" class="btn">Cancel</button></div>' +
+            '<div style="text-align:center;" class="col-xs-4 col-xs-offset-2"><button type="button" onclick="cancelContribution()" class="btn">Cancel</button></div>' +
             '<div style="text-align:center;" class="col-xs-4"><button type="button" value="button" class="btn btn-primary trigger-submit" onclick="addFeatureInstitution()">Submit</button></div>' +
             '</div>' +
             '</form>';
@@ -284,13 +226,19 @@ let addDrawControl = () => {
     map.addControl(drawControl);
 };
 
-addDrawControl();
 
-let filterContributionLayer = (type, filtervalue) =>{
-    if(type === "thema") {
-        contributionLayer.setWhere("thema=filtervalue")
-    }
-    if(type === "category"){
-        contributionLayer.setWhere("kategorie=filtervalue")
-    }
+let searchContributionLayer = (input) =>{
+    input=input.toLowerCase();
+    contributionLayer.eachFeature(feature =>{
+       if(!feature.feature.properties.schlagworte.toLowerCase().includes(input) && !feature.feature.properties.name.toLowerCase().includes(input) ){
+           //hide Feature!!
+       }
+
+    })
 }
+
+let cancelContribution = () =>{
+    if(!$('div #sidebar').hasClass('collapsed')) {
+        $('div #sidebar').addClass('collapsed');
+    }
+};
